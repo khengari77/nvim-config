@@ -2,48 +2,68 @@ return {
   {
     "NickvanDyke/opencode.nvim",
     dependencies = {
-      -- Recommended for `ask()` and `select()`.
-      -- Required for `snacks` provider.
-      ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+      -- Required for `snacks` provider (UI elements).
       { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+      -- Required to register the keymap title
+      "folke/which-key.nvim",
     },
     config = function()
+      ----------------------------------------------------------------
+      -- 1. Register the Group Name for Which-Key
+      ----------------------------------------------------------------
+      local wk = require("which-key")
+      wk.add({
+        { "<leader>o", group = "opencode" },
+      })
+
+      ----------------------------------------------------------------
+      -- 2. Opencode Setup
+      ----------------------------------------------------------------
       ---@type opencode.Opts
       vim.g.opencode_opts = {
-        -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
+        -- Configuration options go here
       }
 
-      -- Required for `opts.events.reload`.
+      -- Required so Neovim detects file changes if the AI modifies them
       vim.o.autoread = true
 
-      -- Recommended/example keymaps.
-      vim.keymap.set({ "n", "x" }, "<C-a>", function()
+      ----------------------------------------------------------------
+      -- 3. Keymaps
+      ----------------------------------------------------------------
+
+      -- Ask the AI (Mapped to <leader>oa)
+      vim.keymap.set({ "n", "x" }, "<leader>oa", function()
         require("opencode").ask("@this: ", { submit = true })
-      end, { desc = "Ask opencode" })
-      vim.keymap.set({ "n", "x" }, "<C-x>", function()
+      end, { desc = "Ask Opencode" })
+
+      -- Select an action (Mapped to <leader>os)
+      vim.keymap.set({ "n", "x" }, "<leader>os", function()
         require("opencode").select()
-      end, { desc = "Execute opencode action…" })
+      end, { desc = "Select Opencode Action" })
+
+      -- Toggle the chat window (Mapped to Ctrl + .)
       vim.keymap.set({ "n", "t" }, "<C-.>", function()
         require("opencode").toggle()
-      end, { desc = "Toggle opencode" })
+      end, { desc = "Toggle Opencode Window" })
 
+      -- Operators: Add context to the AI without opening the window immediately
+      -- "go" + motion (e.g., goip = add inner paragraph)
       vim.keymap.set({ "n", "x" }, "go", function()
         return require("opencode").operator("@this ")
-      end, { expr = true, desc = "Add range to opencode" })
+      end, { expr = true, desc = "Add range to Opencode" })
+
+      -- "goo" (Add current line)
       vim.keymap.set("n", "goo", function()
         return require("opencode").operator("@this ") .. "_"
-      end, { expr = true, desc = "Add line to opencode" })
+      end, { expr = true, desc = "Add line to Opencode" })
 
+      -- Scrolling inside the AI window
       vim.keymap.set("n", "<S-C-u>", function()
         require("opencode").command("session.half.page.up")
-      end, { desc = "opencode half page up" })
+      end, { desc = "Opencode half page up" })
       vim.keymap.set("n", "<S-C-d>", function()
         require("opencode").command("session.half.page.down")
-      end, { desc = "opencode half page down" })
-
-      -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o".
-      vim.keymap.set("n", "+", "<C-a>", { desc = "Increment", noremap = true })
-      vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement", noremap = true })
+      end, { desc = "Opencode half page down" })
     end,
   },
 }

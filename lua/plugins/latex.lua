@@ -21,15 +21,6 @@ return {
         },
       }
 
-      -- Automatically start the compiler when a .tex file is opened
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "tex",
-        callback = function()
-          vim.cmd("VimtexCompile")
-        end,
-        desc = "Start VimTeX compilation on file open",
-      })
-
       -- Keymaps for essential VimTeX functions
       vim.keymap.set("n", "<leader>ll", "<cmd>VimtexCompile<cr>", { desc = "VimTeX Compile" })
       vim.keymap.set("n", "<leader>lv", "<cmd>VimtexView<cr>", { desc = "VimTeX View PDF" })
@@ -48,15 +39,6 @@ return {
         texlab = {},
       },
     },
-  },
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "saadparwaiz1/cmp_luasnip" },
-    opts = function(_, opts)
-      -- Add luasnip to the list of completion sources
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, { name = "luasnip" })
-    end,
   },
   {
     "L3MON4D3/LuaSnip",
