@@ -16,3 +16,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
   group = vim.api.nvim_create_augroup("TexAutoCompile", { clear = true }),
 })
+
+vim.filetype.add({
+  extension = {
+    ["🔥"] = "mojo",
+  },
+})
