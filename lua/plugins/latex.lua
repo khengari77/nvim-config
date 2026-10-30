@@ -32,7 +32,7 @@ return {
   -- Requirement 4: LSP and Snippets for an Overleaf-like experience
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "williamboman/mason.nvim" },
+    dependencies = { "mason-org/mason.nvim" },
     opts = {
       servers = {
         -- This ensures the Texlab language server is set up for autocompletion etc.

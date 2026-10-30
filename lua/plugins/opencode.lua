@@ -11,6 +11,7 @@ return {
       ----------------------------------------------------------------
       -- 1. Register the Group Name for Which-Key
       ----------------------------------------------------------------
+      require("config.interview").opencode()
       local wk = require("which-key")
       wk.add({
         { "<leader>o", group = "opencode" },

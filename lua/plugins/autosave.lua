@@ -14,10 +14,18 @@ return {
     -- is usually a good balance.
     debounce_delay = 1500,
 
-    -- Conditions for saving
-    conditions = {
-      exists = true, -- File must exist on disk
-      modifiable = true, -- Buffer must be modifiable
-    },
+    -- Save only existing, writable files. Debounced callbacks can outlive buffers.
+    condition = function(buf)
+      if not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_buf_is_loaded(buf) then
+        return false
+      end
+      local opts = vim.bo[buf]
+      if opts.buftype ~= "" or not opts.modifiable or opts.readonly then
+        return false
+      end
+      local name = vim.api.nvim_buf_get_name(buf)
+      local stat = name ~= "" and vim.uv.fs_stat(name)
+      return stat and stat.type == "file" and vim.fn.filewritable(name) == 1 or false
+    end,
   },
 }
